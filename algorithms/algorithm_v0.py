@@ -86,6 +86,7 @@ class Algorithm_v0(Algorithm):
                 self.set_all_indices(all_bands)
                 self.set_selected_indices(selected_bands)
                 self.set_weights(mean_weight)
+                y = y.type(torch.LongTensor).to(self.device)
                 mse_loss = self.criterion(y_hat, y)
                 l1_loss = self.l1_loss(channel_weights)
                 lambda_value = self.get_lambda(epoch+1)

@@ -63,11 +63,11 @@ def get_last_layer_input(name):
         "indian_pines": 100,
         "paviaU": 48,
         "salinas": 100,
-        "ghisaconus": 32
+        "ghisaconus": 64
      }
     return counts[name]
 
-def get_dataset_names(name):
+def get_number_of_classes(name):
     class_counts = {
         "indian_pines": 16,
         "paviaU": 10,
