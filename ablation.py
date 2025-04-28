@@ -97,7 +97,8 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
                 aa = alg_df.iloc[0]["aa"]
                 k = alg_df.iloc[0]["k"]
                 alg_df = pd.DataFrame(
-                    {'target_size': [int(2**i) for i in range(3, 10)], 'oa': [oa] * 7, 'aa': [aa] * 7, 'k': [k] * 7})
+                    {'target_size': list(range(5, 31)),
+                     'oa': [oa] * 26, 'aa': [aa] * 26, 'k': [k] * 26})
                 linestyle = "--"
                 color = "#000000"
                 marker = None
@@ -119,9 +120,9 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
         axes[metric_index].text(0.5, -0.3, titles[metric_index],
                                          transform=axes[metric_index].transAxes,
                                          fontsize=18, ha='center')
-        axes[metric_index].set_xscale("log", base=2)
-        axes[metric_index].set_xticks([8, 16, 32, 64, 128, 256, 512])
-        axes[metric_index].get_xaxis().set_major_formatter(plt.ScalarFormatter())
+        #axes[metric_index].set_xscale("log", base=2)
+        #axes[metric_index].set_xticks(list(range(5,31)))
+        #axes[metric_index].get_xaxis().set_major_formatter(plt.ScalarFormatter())
 
 
         if metric_index == 0:
@@ -173,5 +174,5 @@ if __name__ == "__main__":
         get_summaries_rec("compare")
         ,
         #include=["v0","v1","v2","v6","all"]
-        include=["v0","v1","all"]
+        include=["v0","v1","v2","v6","all"]
     )

@@ -2,6 +2,7 @@ from algorithm import Algorithm
 import torch
 import torch.nn as nn
 import attn_handler
+import math
 
 
 class Sparse(nn.Module):
@@ -40,6 +41,7 @@ class ZhangNet(nn.Module):
 
         self.bands = bands
         self.dataset = dataset
+        self.number_of_classes = attn_handler.get_number_of_classes(dataset.name)
         self.weighter = nn.Sequential(
             nn.Linear(self.bands, 512),
             nn.ReLU(),
@@ -49,7 +51,7 @@ class ZhangNet(nn.Module):
             nn.Linear(self.bands, 32),
             nn.ReLU(),
             nn.BatchNorm1d(32),
-            nn.Linear(32, 1),
+            nn.Linear(32, self.number_of_classes),
         )
         self.sparse = Sparse(self.dataset)
         num_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
@@ -62,27 +64,26 @@ class ZhangNet(nn.Module):
         sparse_weights = self.sparse(channel_weights, epoch, l0_norm)
         reweight_out = X * sparse_weights
         output = self.classnet(reweight_out)
-        output = output.reshape(-1)
         return channel_weights, sparse_weights, output
 
 
 class Algorithm_v9(Algorithm):
     def __init__(self, target_size:int, dataset, tag, reporter, verbose):
         super().__init__(target_size, dataset, tag, reporter, verbose)
-        self.criterion = torch.nn.MSELoss()
+        self.criterion = torch.nn.CrossEntropyLoss()
         self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1], dataset).to(self.device)
-        self.total_epoch = 500
+        self.total_epoch = 2000
+
         self.X_train = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
-        self.y_train = torch.tensor(self.dataset.get_train_y(), dtype=torch.float32).to(self.device)
+        self.y_train = torch.tensor(self.dataset.get_train_y(), dtype=torch.long).to(self.device)
 
     def get_selected_indices(self):
         optimizer = torch.optim.Adam(self.zhangnet.parameters(), lr=0.001, betas=(0.9,0.999))
         channel_weights = None
-        sparse_weights = None
         loss = 0
         l1_loss = 0
         mse_loss = 0
-
+        sparse_weights = None
         for epoch in range(self.total_epoch):
             optimizer.zero_grad()
             if sparse_weights is None:
@@ -112,11 +113,5 @@ class Algorithm_v9(Algorithm):
         return torch.norm(channel_weights, p=1) / torch.numel(channel_weights)
 
     def get_lambda(self, l0_norm):
-        l0_norm_threshold = 600
-        if l0_norm <= l0_norm_threshold:
-            return 0
-        m = 0.001
-        return m
-
-
+        return attn_handler.get_lambda(l0_norm)
 

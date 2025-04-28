@@ -75,3 +75,10 @@ def get_number_of_classes(name):
         "ghisaconus": 5
      }
     return class_counts[name]
+
+def get_lambda(l0_norm):
+    l0_norm_threshold = 40
+    if l0_norm <= l0_norm_threshold:
+        return 0
+    m = 0.1
+    return m
