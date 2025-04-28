@@ -8,7 +8,7 @@ import attn_handler
 class Sparse(nn.Module):
     def __init__(self):
         super().__init__()
-        self.k = 0.1
+        self.k = 0.01
 
     def forward(self, X):
         X = torch.where(X < self.k, 0, X)
@@ -16,10 +16,11 @@ class Sparse(nn.Module):
 
 
 class ZhangNet(nn.Module):
-    def __init__(self, bands):
+    def __init__(self, bands, dataset):
         super().__init__()
-
         self.bands = bands
+        self.dataset = dataset
+        self.number_of_classes = attn_handler.get_number_of_classes(dataset.name)
         self.weighter = nn.Sequential(
             nn.Linear(self.bands, 512),
             nn.ReLU(),
@@ -30,7 +31,7 @@ class ZhangNet(nn.Module):
             nn.Linear(self.bands, 32),
             nn.ReLU(),
             nn.BatchNorm1d(32),
-            nn.Linear(32, 1),
+            nn.Linear(32, self.number_of_classes),
         )
         self.sparse = Sparse()
         num_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
@@ -42,19 +43,18 @@ class ZhangNet(nn.Module):
         sparse_weights = self.sparse(channel_weights)
         reweight_out = X * sparse_weights
         output = self.classnet(reweight_out)
-        output = output.reshape(-1)
         return channel_weights, sparse_weights, output
 
 
 class Algorithm_v2(Algorithm):
     def __init__(self, target_size:int, dataset, tag, reporter, verbose):
         super().__init__(target_size, dataset, tag, reporter, verbose)
-        self.criterion = torch.nn.MSELoss()
-        self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1]).to(self.device)
-        self.total_epoch = 500
+        self.criterion = torch.nn.CrossEntropyLoss()
+        self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1], dataset).to(self.device)
+        self.total_epoch = 2000
 
         self.X_train = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
-        self.y_train = torch.tensor(self.dataset.get_train_y(), dtype=torch.float32).to(self.device)
+        self.y_train = torch.tensor(self.dataset.get_train_y(), dtype=torch.long).to(self.device)
 
     def get_selected_indices(self):
         optimizer = torch.optim.Adam(self.zhangnet.parameters(), lr=0.001, betas=(0.9,0.999))
