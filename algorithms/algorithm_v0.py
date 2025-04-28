@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 import math
-import csv
 import attn_handler
 
 

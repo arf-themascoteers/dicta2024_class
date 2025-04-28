@@ -10,5 +10,5 @@ if __name__ == '__main__':
         "datasets": ["ghisaconus"],
         "target_sizes" : list(range(30,4,-1))
     }
-    ev = TaskRunner(tasks,tag,skip_all_bands=True, verbose=True)
+    ev = TaskRunner(tasks,tag,skip_all_bands=False, verbose=True)
     summary, details = ev.evaluate()

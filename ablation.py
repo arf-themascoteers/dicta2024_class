@@ -52,7 +52,7 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
     colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22",
               "#17becf"]
     markers = ['s', 'P', 'D', '^', 'o', '*', '.','s', 'P', 'D', '^', 'o', '*', '.']
-    labels = ["$R^2$", "RMSE", r"RPD"]
+    labels = ["$R^2$", "aa", r"k"]
     titles = ["(a)", "(b)", "(c)"]
 
     min_lim = 0.3
@@ -72,12 +72,12 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
         include = df["algorithm"].unique()
     else:
         df = df[df["algorithm"].isin(include)]
-    min_lim = min(df["r2"].min(), df["rmse"].min(), df["rpd"].min()) - 0.02
-    max_lim = max(df["r2"].max(), df["rmse"].max(), df["rpd"].max()) + 0.02
+    min_lim = min(df["oa"].min(), df["aa"].min(), df["k"].min()) - 0.02
+    max_lim = max(df["oa"].max(), df["aa"].max(), df["k"].max()) + 0.02
     print(min_lim, max_lim)
     dest = os.path.join("saved_figs", f"lucas.png")
     fig, axes = plt.subplots(ncols=3, figsize=(18, 6))
-    for metric_index, metric in enumerate(["r2", "rmse", "rpd"]):
+    for metric_index, metric in enumerate(["oa", "aa", "k"]):
         algorithm_counter = 0
         for algorithm_index, algorithm in enumerate(include):
             algorithm_label = algorithm
@@ -93,11 +93,11 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
 
             marker = markers[algorithm_counter]
             if algorithm == "all":
-                oa = alg_df.iloc[0]["r2"]
-                aa = alg_df.iloc[0]["rmse"]
-                k = alg_df.iloc[0]["rpd"]
+                oa = alg_df.iloc[0]["oa"]
+                aa = alg_df.iloc[0]["aa"]
+                k = alg_df.iloc[0]["k"]
                 alg_df = pd.DataFrame(
-                    {'target_size': [int(2**i) for i in range(3, 10)], 'r2': [oa] * 7, 'rmse': [aa] * 7, 'rpd': [k] * 7})
+                    {'target_size': [int(2**i) for i in range(3, 10)], 'oa': [oa] * 7, 'aa': [aa] * 7, 'k': [k] * 7})
                 linestyle = "--"
                 color = "#000000"
                 marker = None
@@ -170,7 +170,8 @@ def get_summaries_rec(d):
 
 if __name__ == "__main__":
     plot_ablation(
-        get_summaries_rec("summary")
+        get_summaries_rec("compare")
         ,
-        include=["v0","v1","v2","v6","all"]
+        #include=["v0","v1","v2","v6","all"]
+        include=["v0","v1","all"]
     )

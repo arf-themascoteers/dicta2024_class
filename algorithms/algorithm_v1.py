@@ -17,10 +17,11 @@ class Sparse(nn.Module):
 
 
 class ZhangNet(nn.Module):
-    def __init__(self, bands):
+    def __init__(self, bands, dataset):
         super().__init__()
-        
         self.bands = bands
+        self.dataset = dataset
+        self.number_of_classes = attn_handler.get_number_of_classes(dataset.name)
         self.weighter = nn.Sequential(
             nn.Linear(self.bands, 512),
             nn.ReLU(),
@@ -31,7 +32,7 @@ class ZhangNet(nn.Module):
             nn.Linear(self.bands, 32),
             nn.ReLU(),
             nn.BatchNorm1d(32),
-            nn.Linear(32, 1),
+            nn.Linear(32, self.number_of_classes),
         )
         self.sparse = Sparse()
         num_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
@@ -42,15 +43,14 @@ class ZhangNet(nn.Module):
         sparse_weights = self.sparse(channel_weights)
         reweight_out = X * sparse_weights
         output = self.classnet(reweight_out)
-        output = output.reshape(-1)
         return channel_weights, sparse_weights, output
 
 
 class Algorithm_v1(Algorithm):
     def __init__(self, target_size:int, dataset, tag, reporter, verbose):
         super().__init__(target_size, dataset, tag, reporter, verbose)
-        self.criterion = torch.nn.MSELoss()
-        self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1]).to(self.device)
+        self.criterion = torch.nn.CrossEntropyLoss()
+        self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1], dataset).to(self.device)
         self.total_epoch = 500
 
         self.X_train = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
@@ -74,6 +74,7 @@ class Algorithm_v1(Algorithm):
                 self.set_all_indices(all_bands)
                 self.set_selected_indices(selected_bands)
                 self.set_weights(mean_weight)
+                y = y.type(torch.LongTensor).to(self.device)
                 mse_loss = self.criterion(y_hat, y)
                 l1_loss = self.l1_loss(channel_weights)
                 lambda_value = self.get_lambda(epoch+1)
