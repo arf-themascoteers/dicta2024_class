@@ -18,14 +18,13 @@ class Sparse(nn.Module):
 
     def get_k(self, epoch,l0_norm):
         l0_norm_threshold = 40
-        start = 250
-        maximum = 1
-        end = 500
-        minimum = 0
+        start = 1500
+        maximum = 0.5
+        end = 2000
+        minimum = 0.001
 
         if l0_norm <= l0_norm_threshold:
             return self.last_k
-
 
         if epoch < start:
             return minimum

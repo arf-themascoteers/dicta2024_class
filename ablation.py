@@ -171,8 +171,8 @@ def get_summaries_rec(d):
 
 if __name__ == "__main__":
     plot_ablation(
-        get_summaries_rec("compare")
+        get_summaries_rec("next")
         ,
         #include=["v0","v1","v2","v6","all"]
-        include=["v0","v1","v2","v6","all"]
+        include=["v0","v1","v6","v9","all"]
     )
