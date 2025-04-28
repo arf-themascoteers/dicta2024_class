@@ -56,3 +56,22 @@ def report_stats(model,channel_weights, sparse_weights, epoch, mse_loss, l1_loss
         m[-1]=int(m[-1])
         m[-2]=int(m[-2])
         print(''.join(str(v).ljust(10) for v in m))
+
+
+def get_last_layer_input(name):
+    counts = {
+        "indian_pines": 100,
+        "paviaU": 48,
+        "salinas": 100,
+        "ghisaconus": 32
+     }
+    return counts[name]
+
+def get_dataset_names(name):
+    class_counts = {
+        "indian_pines": 16,
+        "paviaU": 10,
+        "salinas": 17,
+        "ghisaconus": 5
+     }
+    return class_counts[name]

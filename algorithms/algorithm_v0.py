@@ -18,30 +18,32 @@ class Sparse(nn.Module):
 
 
 class ZhangNet(nn.Module):
-    def __init__(self, bands):
+    def __init__(self, bands, dataset):
         super().__init__()
-        
         self.bands = bands
+        self.dataset = dataset
+        self.number_of_classes = attn_handler.get_number_of_classes(dataset.name)
         self.weighter = nn.Sequential(
             nn.Linear(self.bands, 512),
             nn.ReLU(),
             nn.Linear(512, self.bands),
             nn.Sigmoid()
         )
+        last_layer_input = attn_handler.get_last_layer_input(dataset.name)
         self.classnet = nn.Sequential(
-            nn.Conv1d(1,8,kernel_size=8, stride=4),
-            nn.BatchNorm1d(8),
-            nn.ReLU(),
-            nn.MaxPool1d(kernel_size=4, stride=2),
-            nn.Conv1d(8, 16, kernel_size=16, stride=8),
+            nn.Conv1d(1,16,kernel_size=3, stride=1, padding=1),
             nn.BatchNorm1d(16),
             nn.ReLU(),
-            nn.MaxPool1d(kernel_size=4, stride=2),
-            nn.Conv1d(16, 32, kernel_size=8, stride=4),
-            nn.BatchNorm1d(32),
-            nn.MaxPool1d(kernel_size=4, stride=2),
+            nn.MaxPool1d(kernel_size=2, stride=2, padding=0),
+            nn.Conv1d(16, 8, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm1d(8),
+            nn.ReLU(),
+            nn.MaxPool1d(kernel_size=2, stride=2, padding=0),
+            nn.Conv1d(8, 4, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm1d(4),
+            nn.MaxPool1d(kernel_size=2, stride=2, padding=0),
             nn.Flatten(start_dim=1),
-            nn.Linear(64,1)
+            nn.Linear(last_layer_input,self.number_of_classes)
         )
         self.sparse = Sparse()
         num_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
@@ -53,15 +55,14 @@ class ZhangNet(nn.Module):
         reweight_out = X * sparse_weights
         reweight_out = reweight_out.reshape(reweight_out.shape[0],1,reweight_out.shape[1])
         output = self.classnet(reweight_out)
-        output = output.reshape(-1)
         return channel_weights, sparse_weights, output
 
 
 class Algorithm_v0(Algorithm):
     def __init__(self, target_size:int, dataset, tag, reporter, verbose):
         super().__init__(target_size, dataset, tag, reporter, verbose)
-        self.criterion = torch.nn.MSELoss()
-        self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1]).to(self.device)
+        self.criterion = torch.nn.CrossEntropyLoss()
+        self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1], dataset).to(self.device)
         self.total_epoch = 500
 
         self.X_train = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
