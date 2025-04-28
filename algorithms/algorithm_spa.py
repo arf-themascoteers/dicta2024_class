@@ -12,6 +12,9 @@ class Algorithm_spa(Algorithm):
         vip.fit(self.dataset.get_train_x(), self.dataset.get_train_y())
         mask = vip.vips_ > 0.3
         selector.fit(self.dataset.get_train_x(), self.dataset.get_train_y(), mask=mask)
-        return selector, selector.get_support(indices=True)
+        feature_ranking = selector.get_support(indices=True)
+        self.set_selected_indices(feature_ranking)
+        return self, feature_ranking
 
-
+    def is_cacheable(self):
+        return False
