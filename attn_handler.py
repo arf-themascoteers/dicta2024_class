@@ -36,9 +36,9 @@ def report_stats(model,channel_weights, sparse_weights, epoch, mse_loss, l1_loss
     l0_s = torch.norm(means_sparse, p=0).item()
 
     mean_weight, all_bands, selected_bands = get_indices(channel_weights, model.target_size)
-    r2, rmse, rpd = train_test_evaluator.evaluate_dataset(model.dataset, model)
+    oa, aa, k = train_test_evaluator.evaluate_dataset(model.dataset, model)
     model.reporter.report_epoch(epoch, mse_loss, l1_loss, lambda1, loss,
-                               r2, rmse, rpd,
+                               oa, aa, k,
                                min_cw, max_cw, avg_cw,
                                min_s, max_s, avg_s,
                                l0_cw, l0_s,
@@ -46,9 +46,9 @@ def report_stats(model,channel_weights, sparse_weights, epoch, mse_loss, l1_loss
 
     PRINT = True
     if PRINT:
-        m = [epoch, mse_loss, l1_loss, lambda1, loss, r2, rmse, rpd, min_cw, max_cw, avg_cw, min_s, max_s, avg_s, l0_cw, l0_s]
+        m = [epoch, mse_loss, l1_loss, lambda1, loss, oa, aa, k, min_cw, max_cw, avg_cw, min_s, max_s, avg_s, l0_cw, l0_s]
         if epoch == 0:
-            names = ['epoch', 'mse_loss', 'l1_loss', 'lambda1', 'loss', 'r2', 'rmse', 'rpd', 'min_cw', 'max_cw',
+            names = ['epoch', 'mse_loss', 'l1_loss', 'lambda1', 'loss', 'oa', 'aa', 'k', 'min_cw', 'max_cw',
                  'avg_cw', 'min_s', 'max_s', 'avg_s', 'l0_cw', 'l0_s']
             print(''.join(name.ljust(10) for name in names))
         m = [x.item() if hasattr(x, 'item') else x for x in m]
