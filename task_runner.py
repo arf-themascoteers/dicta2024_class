@@ -17,7 +17,7 @@ class TaskRunner:
         self.verbose = verbose
         self.tag = tag
         self.reporter = Reporter(self.tag, self.skip_all_bands)
-        self.cache = pd.DataFrame(columns=["dataset","algorithm","cache_tag","r2","rmse","rpd","time","selected_features","selected_weights"])
+        self.cache = pd.DataFrame(columns=["dataset","algorithm","cache_tag","oa","aa","k","time","selected_features","selected_weights"])
 
     def evaluate(self):
         for dataset_name in self.task["datasets"]:
@@ -36,8 +36,8 @@ class TaskRunner:
     def process_a_case(self, algorithm:Algorithm):
         metric = self.reporter.get_saved_metrics(algorithm)
         if metric is None:
-            r2s, rmses, rpds, metric = self.get_results_for_a_case(algorithm)
-            self.reporter.write_summary(algorithm, r2s, rmses, rpds, metric)
+            oas, aas, ks, metric = self.get_results_for_a_case(algorithm)
+            self.reporter.write_summary(algorithm, oas, aas, ks, metric)
         else:
             print(algorithm.get_name(), "for", algorithm.dataset.get_name(), "for",
                   algorithm.target_size,"was done. Skipping")
@@ -56,9 +56,9 @@ class TaskRunner:
               f"for size {algorithm.target_size} "
               f"for {algorithm.get_name()} "
               f"for cache_tag {algorithm.get_cache_tag()}. Computing.")
-        r2s, rmses, rpds, metric = algorithm.compute_performance()
+        oas, aas, ks, metric = algorithm.compute_performance()
         self.save_to_cache(algorithm, metric)
-        return r2s, rmses, rpds, metric
+        return oas, aas, ks, metric
 
     def save_to_cache(self, algorithm:Algorithm, metric:Metrics):
         if not algorithm.is_cacheable():
@@ -67,7 +67,7 @@ class TaskRunner:
             "dataset":algorithm.dataset.get_name(),
             "algorithm": algorithm.get_name(),
             "cache_tag": algorithm.get_cache_tag(),
-            "time":metric.time,"r2":metric.r2,"rmse":metric.rmse,"rpd":metric.rpd,
+            "time":metric.time,"oa":metric.oa,"aa":metric.aa,"k":metric.k,
             "selected_features":algorithm.get_all_indices(),
             "selected_weights":algorithm.get_weights()
         }
@@ -87,11 +87,11 @@ class TaskRunner:
         row = rows.iloc[0]
         selected_features = row["selected_features"][0:algorithm.target_size]
         selected_weights = row["selected_weights"][0:algorithm.target_size]
-        return Metrics(row["time"], row["r2"],row["rmse"], row["rpd"], selected_features, selected_weights)
+        return Metrics(row["time"], row["oa"],row["aa"], row["k"], selected_features, selected_weights)
 
     def evaluate_for_all_features(self, dataset):
         for fold, (train_x, test_x, train_y, test_y) in enumerate(dataset.get_k_folds()):
-            r2, rmse, k = train_test_evaluator.evaluate_split(train_x, test_x, train_y, test_y, dataset.scaler_y)
-            self.reporter.write_details_all_features(fold, dataset.get_name(), r2, rmse, k)
+            oa, aa, k = train_test_evaluator.evaluate_split(train_x, test_x, train_y, test_y, dataset.scaler_y)
+            self.reporter.write_details_all_features(fold, dataset.get_name(), oa, aa, k)
 
 
