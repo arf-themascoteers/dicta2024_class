@@ -21,7 +21,7 @@ class Sparse(nn.Module):
         start = 1500
         maximum = 0.5
         end = 2000
-        minimum = 0.001
+        minimum = 0
 
         if l0_norm <= l0_norm_threshold:
             return self.last_k
