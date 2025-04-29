@@ -80,5 +80,5 @@ def get_lambda(l0_norm):
     l0_norm_threshold = 40
     if l0_norm <= l0_norm_threshold:
         return 0
-    m = 0.5
+    m = 0.07
     return m
