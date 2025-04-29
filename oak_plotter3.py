@@ -8,6 +8,7 @@ ALGS = {
     "v9": "Proposed Algorithm",
     "all": "All Bands",
     "mcuve": "MCUVE [17]",
+    "spa": "SPA [18]",
     "bsnet": "BS-Net-FC [2]",
     "pcal": "PCAL [16]",
 }
@@ -20,13 +21,11 @@ DSS = {
 
 COLORS = {
     "v0": "#1f77b4",
-    "v4": "#d62728",
     "all": "#2ca02c",
     "mcuve": "#ff7f0e",
+    "spa": "#00CED1",
     "bsnet": "#008000",
     "pcal": "#9467bd",
-    "v1": "#7FFF00",
-    "v2": "#FF00FF",
     "v9": "#d62728",
 }
 
@@ -151,6 +150,6 @@ def get_summaries_rec(d):
 
 if __name__ == "__main__":
     plot_combined(
-        get_summaries_rec("11_7"),
-        include=["pcal", "mcuve", "bsnet", "v0", "v9", "all"]
+        get_summaries_rec("curated"),
+        include=["pcal", "mcuve", "spa", "bsnet", "v0", "v9", "all"]
     )
