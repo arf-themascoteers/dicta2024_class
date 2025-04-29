@@ -36,7 +36,7 @@ def sanitize_df(df):
     return df
 
 
-def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
+def plot_ablation_oak(source, dataset, exclude=None, include=None, out_file="ab.png"):
     if exclude is None:
         exclude = []
     os.makedirs("saved_figs", exist_ok=True)
@@ -47,7 +47,7 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
         df = [d for d in df if len(d)!=0]
         df = pd.concat(df, axis=0, ignore_index=True)
 
-
+    df = df[df["dataset"] == dataset]
     df.to_csv(os.path.join("saved_figs", "source.split.csv"), index=False)
     colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22",
               "#17becf"]
@@ -75,7 +75,7 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
     min_lim = min(df["oa"].min(), df["aa"].min(), df["k"].min()) - 0.02
     max_lim = max(df["oa"].max(), df["aa"].max(), df["k"].max()) + 0.02
     print(min_lim, max_lim)
-    dest = os.path.join("saved_figs", f"lucas.png")
+    dest = os.path.join("saved_figs", f"ghisaconus.png")
     fig, axes = plt.subplots(ncols=3, figsize=(18, 6))
     for metric_index, metric in enumerate(["oa", "aa", "k"]):
         algorithm_counter = 0
@@ -137,15 +137,17 @@ def plot_ablation_oak(source, exclude=None, include=None, out_file="ab.png"):
         axes[metric_index].grid(True, linestyle='-', alpha=0.6)
 
     fig.subplots_adjust(wspace=0.4, top=0.7, bottom=0.2)
+    print(dest)
     plt.savefig(dest, bbox_inches='tight', pad_inches=0.05)
     plt.show()
 
 
 
-def plot_ablation(source, include = None):
+def plot_ablation(source, dataset, include = None):
     if include is None:
         include = []
     plot_ablation_oak(source,
+        dataset,
          out_file = "ablation.png",
          include=include
     )
@@ -171,8 +173,10 @@ def get_summaries_rec(d):
 
 if __name__ == "__main__":
     plot_ablation(
-        get_summaries_rec("next")
+        get_summaries_rec("curated")
         ,
         #include=["v0","v1","v2","v6","all"]
+        dataset="ghisaconus",
         include=["v0","v1","v6","v9","all"]
+
     )

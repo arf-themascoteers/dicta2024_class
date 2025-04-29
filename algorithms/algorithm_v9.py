@@ -18,9 +18,9 @@ class Sparse(nn.Module):
 
     def get_k(self, epoch,l0_norm):
         l0_norm_threshold = 40
-        start = 1500
-        maximum = 0.5
-        end = 2000
+        start = 250
+        maximum = 0.1
+        end = 500
         minimum = 0
 
         if l0_norm <= l0_norm_threshold:
@@ -71,7 +71,7 @@ class Algorithm_v9(Algorithm):
         super().__init__(target_size, dataset, tag, reporter, verbose)
         self.criterion = torch.nn.CrossEntropyLoss()
         self.zhangnet = ZhangNet(self.dataset.get_train_x().shape[1], dataset).to(self.device)
-        self.total_epoch = 2000
+        self.total_epoch = 500
 
         self.X_train = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
         self.y_train = torch.tensor(self.dataset.get_train_y(), dtype=torch.long).to(self.device)
