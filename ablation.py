@@ -3,13 +3,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
+plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams['font.size'] = 22
+
+
 ALGS = {
-    "v0": "BS-Net-Classifier [12]",
+    "v0": "BS-Net-Classifier",
     "all": "All Bands",
-    "v1": "V1: BS-Net-Classifier [12] + FCNN",
+    "v1": "V1: BS-Net-Classifier + FCNN",
     "v2": "V2: V1 + improved aggregation",
-    "v6": "V3: V2 + absolute value activation (no sparse constraint)",
-    "v9": "V4: V3 + dynamic sparse constraint (proposed algorithm)",
+    "v6": "V3: V2 + absolute value activation",
+    "v9": "Proposed SABS: V3 + dynamic regulation",
 }
 
 COLORS = {
@@ -52,7 +56,7 @@ def plot_ablation_oak(source, dataset, exclude=None, include=None, out_file="ab.
     colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22",
               "#17becf"]
     markers = ['s', 'P', 'D', '^', 'o', '*', '.','s', 'P', 'D', '^', 'o', '*', '.']
-    labels = ["$R^2$", "aa", r"k"]
+    labels = ["$OA$", "AA", r"$\kappa$"]
     titles = ["(a)", "(b)", "(c)"]
 
     min_lim = 0.3
@@ -75,7 +79,7 @@ def plot_ablation_oak(source, dataset, exclude=None, include=None, out_file="ab.
     min_lim = min(df["oa"].min(), df["aa"].min(), df["k"].min()) - 0.02
     max_lim = max(df["oa"].max(), df["aa"].max(), df["k"].max()) + 0.02
     print(min_lim, max_lim)
-    dest = os.path.join("saved_figs", f"ghisaconus.png")
+    dest = os.path.join("saved_figs", f"ablation_{dataset}.png")
     fig, axes = plt.subplots(ncols=3, figsize=(18, 6))
     for metric_index, metric in enumerate(["oa", "aa", "k"]):
         algorithm_counter = 0
@@ -113,25 +117,25 @@ def plot_ablation_oak(source, dataset, exclude=None, include=None, out_file="ab.
                                     )
             #axes[metric_index].legend()
 
-        axes[metric_index].set_xlabel('Target size', fontsize=18)
-        axes[metric_index].set_ylabel(labels[metric_index], fontsize=18)
+        axes[metric_index].set_xlabel('Target size')
+        axes[metric_index].set_ylabel(labels[metric_index])
         #axes[metric_index].set_ylim(min_lim, max_lim)
-        axes[metric_index].tick_params(axis='both', which='major', labelsize=14)
+        axes[metric_index].tick_params(axis='both', which='major')
         axes[metric_index].text(0.5, -0.3, titles[metric_index],
                                          transform=axes[metric_index].transAxes,
-                                         fontsize=18, ha='center')
+                                         ha='center')
         #axes[metric_index].set_xscale("log", base=2)
         #axes[metric_index].set_xticks(list(range(5,31)))
         #axes[metric_index].get_xaxis().set_major_formatter(plt.ScalarFormatter())
 
 
         if metric_index == 0:
-            legend = axes[metric_index].legend(loc='upper left', fontsize=18, ncols=2,
-                                               bbox_to_anchor=(0, 1.5),
+            legend = axes[metric_index].legend(loc='upper left', ncols=2,
+                                               bbox_to_anchor=(-0.05, 1.6),
                                                columnspacing=1.0, frameon=True
                                                )
-        legend.get_title().set_fontsize('18')
-        legend.get_title().set_fontweight('bold')
+        #legend.get_title().set_fontsize('18')
+        #legend.get_title().set_fontweight('bold')
 
 
         axes[metric_index].grid(True, linestyle='-', alpha=0.6)
@@ -176,7 +180,7 @@ if __name__ == "__main__":
         get_summaries_rec("curated")
         ,
         #include=["v0","v1","v2","v6","all"]
-        dataset="ghisaconus",
-        include=["v0","v1","v6","v9","all"]
+        dataset="indian_pines",
+        include=["v0","v1","v2","v6","v9","all"]
 
     )

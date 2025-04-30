@@ -1,0 +1,25 @@
+dataset,algorithm,count_surpassing_apf,max_oa,target_size_at_max_oa,oa_diff_percent
+ghisaconus,BS-Net-FC,17,0.788,27,+3.7%
+ghisaconus,MCUVE,-,0.657,29,-13.6%
+ghisaconus,PCAL,-,0.751,30,-1.2%
+ghisaconus,SPA,11,0.808,28,+6.3%
+ghisaconus,BS-Net-Classifier,14,0.778,30,+2.4%
+ghisaconus,Proposed SABS,11,0.815,18,+7.2%
+indian_pines,BS-Net-FC,21,0.748,26,+1.1%
+indian_pines,MCUVE,-,0.638,30,-13.8%
+indian_pines,PCAL,-,0.626,26,-15.4%
+indian_pines,SPA,-,0.596,30,-19.5%
+indian_pines,BS-Net-Classifier,-,0.705,10,-4.7%
+indian_pines,Proposed SABS,10,0.798,30,+7.8%
+paviaU,BS-Net-FC,-,0.913,21,-0.8%
+paviaU,MCUVE,-,0.841,27,-8.6%
+paviaU,PCAL,-,0.904,25,-1.7%
+paviaU,SPA,-,0.911,25,-1.0%
+paviaU,BS-Net-Classifier,-,0.918,28,-0.2%
+paviaU,Proposed SABS,11,0.925,25,+0.5%
+salinas,BS-Net-FC,29,0.921,29,+0.1%
+salinas,MCUVE,-,0.915,29,-0.5%
+salinas,PCAL,-,0.91,30,-1.1%
+salinas,SPA,-,0.91,25,-1.1%
+salinas,BS-Net-Classifier,-,0.914,29,-0.7%
+salinas,Proposed SABS,18,0.932,30,+1.3%
