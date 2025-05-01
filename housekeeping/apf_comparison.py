@@ -34,9 +34,9 @@ for (dataset, algorithm), group in df[df["algorithm"] != "all"].groupby(["datase
     max_oa_ts = max_row["target_size"]
 
     diff_percent = ((max_oa - threshold) / threshold) * 100
-    diff_percent = f"{'+' if diff_percent >= 0 else ''}{diff_percent:.1f}%"
+    diff_percent = f"{'+' if diff_percent >= 0 else ''}{diff_percent:.2f}%"
 
-    results.append((dataset, ALGS[algorithm], min_target_size_surpassing, max_oa, max_oa_ts, diff_percent))
+    results.append((dataset, ALGS[algorithm], min_target_size_surpassing, round(max_oa,2), max_oa_ts, diff_percent))
 
 result_df = pd.DataFrame(results, columns=[
     "dataset",
