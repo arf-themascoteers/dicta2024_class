@@ -7,10 +7,10 @@ def get_l0(file):
 
 y = []
 
-y.append(get_l0("results/v0_lambda_v0_lambda_indian_pines_30.csv"))
-y.append(get_l0("results/v0_lambda2_v0_lambda2_indian_pines_30.csv"))
-y.append(get_l0("results/v0_lambda4_v0_lambda4_indian_pines_30.csv"))
-y.append(get_l0("results/v0_lambda3_v0_lambda3_indian_pines_30.csv"))
+y.append(get_l0("curated/v0_lambda_v0_lambda_indian_pines_30.csv"))
+y.append(get_l0("curated/v0_lambda2_v0_lambda2_indian_pines_30.csv"))
+y.append(get_l0("curated/v0_lambda4_v0_lambda4_indian_pines_30.csv"))
+y.append(get_l0("curated/v0_lambda3_v0_lambda3_indian_pines_30.csv"))
 
 labels = [
 r"$\beta$ = 0.0001",
@@ -25,7 +25,7 @@ x = list(range(len(y[0])))
 for i in range(len(y)):
     plt.plot(x, y[i], label=labels[i])
 
-plt.axhline(y=30, color='gray', linestyle='--', linewidth=1, label="Target maximum size")
+plt.axhline(y=30, color='gray', linestyle='--', linewidth=1, label="Target size")
 plt.xlabel('Epoch')
 plt.ylabel('$k_{active}$')
 plt.legend()
