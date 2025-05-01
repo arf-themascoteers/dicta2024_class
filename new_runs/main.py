@@ -4,11 +4,11 @@ import os
 os.chdir("..")
 
 if __name__ == '__main__':
-    tag = "v9_pu"
+    tag = "v9_time"
     tasks = {
         "algorithms" : ["v9"],
         "datasets": [
-            "paviaU"
+            "indian_pines"
         ],
         "target_sizes" : [30]
     }

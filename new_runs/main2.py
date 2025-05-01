@@ -4,13 +4,13 @@ import os
 os.chdir("..")
 
 if __name__ == '__main__':
-    tag = "v9_grad"
+    tag = "v9_weight"
     tasks = {
-        "algorithms" : ["v9_grad"],
+        "algorithms" : ["v9_weight"],
         "datasets": [
-            "ghisaconus"
+            "indian_pines"
         ],
         "target_sizes" : [30]
     }
-    ev = TaskRunner(tasks,tag,skip_all_bands=True, verbose=False)
+    ev = TaskRunner(tasks,tag,skip_all_bands=True, verbose=True)
     summary, details = ev.evaluate()
