@@ -4,13 +4,13 @@ import os
 os.chdir("..")
 
 if __name__ == '__main__':
-    tag = "bsdr_ip"
+    tag = "bsdr_all"
     tasks = {
         "algorithms" : ["bsdr"],
         "datasets": [
-            "indian_pines"
+            "indian_pines", "paviaU", "salinas", "ghisaconus"
         ],
-        "target_sizes" : [8]
+        "target_sizes" : list(range(30,4,-1))
     }
-    ev = TaskRunner(tasks,tag,skip_all_bands=True, verbose=True)
+    ev = TaskRunner(tasks,tag,skip_all_bands=True, verbose=False)
     summary, details = ev.evaluate()
