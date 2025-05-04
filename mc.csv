@@ -1,1 +1,4 @@
-algorithm,param_indian_pines,param_paviaU,param_salinas,param_GHISACONUS,time_indian_pines,time_paviaU,time_salinas,time_GHISACONUS,
+algorithm,param_indian_pines,param_paviaU,param_salinas,param_GHISACONUS,param_LUCAS,time_indian_pines,time_paviaU,time_salinas,time_GHISACONUS,time_lucas
+BS-Net-FC,154416,104170,156488,118674,2226416,180.586,2083.688,1188.858,33.612,202.612
+BS-Net-Classifier,207740,107189,211941,135724,4311953,477.226,5535.401,3276.822,102.864,1181.152
+Proposed SABS,212536,109809,216797,139240,4440041,169.327,2077.211,1135.721,24.041,364.234
