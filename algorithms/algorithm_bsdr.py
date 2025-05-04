@@ -43,7 +43,7 @@ class ANN(nn.Module):
             nn.Linear(target_size, 40),
             nn.BatchNorm1d(40),
             nn.LeakyReLU(),
-            nn.Linear(40, 1)
+            nn.Linear(40, self.number_of_classes)
         )
 
     @staticmethod
@@ -74,7 +74,7 @@ class Algorithm_bsdr(Algorithm):
         self.total_epoch = 500
 
         self.X_train = torch.tensor(self.dataset.get_train_x(), dtype=torch.float32).to(self.device)
-        self.y_train = torch.tensor(self.dataset.get_train_y(), dtype=torch.float32).to(self.device)
+        self.y_train = torch.tensor(self.dataset.get_train_y(), dtype=torch.long).to(self.device)
 
         self.linterp_train = LinearInterpolationModule(self.X_train, self.device)
 
