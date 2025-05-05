@@ -183,15 +183,16 @@ def create_plot(plot_type="plot_cl_sabs"):
         plot_type,
         include=[
             "all",
-            "pcal",
-            "mcuve",
+            # "pcal",
+            # "mcuve",
             "spa",
             "bsnet",
             "v0",
-            "v9"
+            "v9",
+            "bsdr"
         ]
     )
 
 
 if __name__ == "__main__":
-    create_plot("plot_cl_sabs")
+    create_plot("plot_cl_bsdr")

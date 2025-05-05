@@ -1,11 +1,12 @@
 import pandas as pd
 import os
 
-folder = "../refined"
-files = [f for f in os.listdir(folder) if f.endswith(".csv")]
-df = pd.concat([pd.read_csv(os.path.join(folder, f)) for f in files], ignore_index=True)
+os.chdir("..")
+
+df = pd.read_csv("temp_curated2_combined.csv")
 dbs = ["pcal", "mcuve", "spa", "bsnet", "v0", "v9", "all"]
 df = df[df["algorithm"].isin(dbs)]
+df = df[(df["algorithm"] == "all") | (df["target_size"].isin([5, 10, 15, 20, 25, 30]))]
 
 ALGS = {
     "v0": "BS-Net-Classifier",
@@ -25,6 +26,10 @@ results = []
 for (dataset, algorithm), group in df[df["algorithm"] != "all"].groupby(["dataset", "algorithm"]):
     apf = df[(df["algorithm"] == "all") & (df["dataset"] == dataset)]
     threshold = apf.iloc[0]["oa"]
+    threshold_aa = apf.iloc[0]["aa"]
+    threshold_k = apf.iloc[0]["k"]
+
+    print(dataset, threshold, threshold_aa, threshold_k)
 
     surpass = group[group["oa"] > threshold]
     min_target_size_surpassing = surpass["target_size"].min() if not surpass.empty else "-"

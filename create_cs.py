@@ -13,8 +13,7 @@ def sanitize_df(df):
 
 def get_summaries_rec(d):
     files = os.listdir(d)
-    paths = [os.path.join(d, f) for f in files if f.endswith("_summary.csv")
-             and "all_features_summary" not in f]
+    paths = [os.path.join(d, f) for f in files if f.endswith("_summary.csv")]
     paths = [p for p in paths if not os.path.isdir(p)]
 
     children = [os.path.join(d, f) for f in files if os.path.isdir(os.path.join(d, f))]
@@ -29,8 +28,8 @@ def combine_summary(loc):
     df = [sanitize_df(pd.read_csv(loc)) for loc in source]
     df = [d for d in df if len(d) != 0]
     df = pd.concat(df, axis=0, ignore_index=True)
-    df.to_csv(f"{loc}/loc_combined.csv", index=False)
+    df.to_csv(f"{loc}_combined.csv", index=False)
 
 
 if __name__ == "__main__":
-    combine_summary("temp_curated")
+    combine_summary("temp_curated2")
