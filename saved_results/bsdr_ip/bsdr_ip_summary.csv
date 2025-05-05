@@ -1,0 +1,2 @@
+dataset,target_size,algorithm,time,oa,aa,k,selected_features,selected_weights
+indian_pines,8,bsdr,25.583,0.7,0.631,0.631,23|45|63|86|110|127|153|178,0.0|0.0|0.0|0.0|0.0|0.0|0.0|0.0

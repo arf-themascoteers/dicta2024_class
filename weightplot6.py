@@ -26,9 +26,15 @@ for idx, path in enumerate(paths):
     last_row = df.iloc[-1]
     weights = {int(col.split('_')[1]): val for col, val in last_row.items() if col.startswith('weight_')}
     sorted_weights = dict(sorted(weights.items(), key=lambda item: item[1], reverse=True)[:30])
+
+    x_ticks = [132,6,28,112,38,97,176,7,8,118,46,34,158,78,37,68,48,70,63,18,160,35,172,181,148,94,126,40,133,59]
+    if idx != 0:
+        x_ticks = sorted_weights.keys()
+
+
     axes[idx].bar(range(len(sorted_weights)), sorted_weights.values())
     axes[idx].set_xticks(range(len(sorted_weights)))
-    axes[idx].set_xticklabels([key + 1 for key in sorted_weights.keys()])
+    axes[idx].set_xticklabels([key + 1 for key in x_ticks])
     axes[idx].set_title(dss[idx])
     axes[idx].set_xlabel('Band number')
     axes[idx].set_ylabel('Weight')

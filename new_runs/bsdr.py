@@ -4,11 +4,11 @@ import os
 os.chdir("..")
 
 if __name__ == '__main__':
-    tag = "bsdr_all"
+    tag = "bsdr_ip3"
     tasks = {
         "algorithms" : ["bsdr"],
         "datasets": [
-            "indian_pines", "paviaU", "salinas", "ghisaconus"
+            "indian_pines"
         ],
         "target_sizes" : list(range(30,4,-1))
     }

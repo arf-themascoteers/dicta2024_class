@@ -6,14 +6,45 @@ import os
 plt.rcParams['font.family'] = 'Times New Roman'
 plt.rcParams['font.size'] = 18
 
+order = [
+    "all",
+    "pcal",
+    "mcuve",
+    "spa2",
+    "bsnet",
+    "v0",
+    "v9_dummy",#V1
+    "v4_dummy",#V2
+    "v1",#V3
+    "v2_dummy",#SABS
+    "v9"#BSDR
+]
 ALGS = {
-    "v0": "BS-Net-Classifier",
-    "v9": "Proposed SABS",
     "all": "All Bands",
-    "mcuve": "MCUVE",
-    "spa": "SPA",
-    "bsnet": "BS-Net-FC",
     "pcal": "PCAL",
+    "mcuve": "MCUVE",
+    "spa2": "SPA",
+    "bsnet": "BS_Net-FC",
+    "v0": "BS-Net-Classifier",
+    "v9_dummy": "V1: BS-Net-Classifier + FCNN",
+    "v4_dummy": "V2: V1 + improved aggregation",
+    "v1": "V3: V2 + absolute value activation",
+    "v2_dummy": "Proposed SABS",
+    "v9": "Proposed BSDR"
+}
+
+COLORS = {
+    "all": "black",
+    "pcal": "#008080",
+    "mcuve": "orange",
+    "spa2": "green",
+    "bsnet": "#8B4513",
+    "v0": "cyan",
+    "v1": "blue",
+    "v2": "orange",
+    "v6": "green",
+    "v9": "red",
+    "bsdr": "purple",
 }
 
 DSS = {
@@ -21,16 +52,6 @@ DSS = {
     "paviaU": "Pavia University",
     "salinas": "Salinas",
     "ghisaconus": "GHISACONUS"
-}
-
-COLORS = {
-    "v0": "#1f77b4",
-    "all": "#2ca02c",
-    "mcuve": "#ff7f0e",
-    "spa": "#00CED1",
-    "bsnet": "#008000",
-    "pcal": "#9467bd",
-    "v9": "#d62728",
 }
 
 def sanitize_df(df):
@@ -81,12 +102,13 @@ def plot_combined_grid(source, exclude=None, include=None, out_dir="plots"):
 
         colors = list(COLORS.values())
         markers = ['s', 'P', 'D', '^', 'o', '*', '.', 's', 'P', 'D', '^', 'o', '*', '.']
-        order = ["all", "pcal", "mcuve", "bsnet", "v0", "v1", "v2", "v3", "v35", "v4"]
+        order = ["all", "pcal", "mcuve", "bsnet", "v0", "v1", "v2", "v3", "v35", "v4","v9","bsdr"]
 
         df["sort_order"] = df["algorithm"].apply(lambda x: order.index(x) if x in order else len(order) + ord(x[0]))
         df = df.sort_values("sort_order").drop(columns=["sort_order"])
         os.makedirs("refined",exist_ok=True)
         df.to_csv(f"refined/refined_{dataset_key}.csv",index=False)
+        df = df[(df["algorithm"] == "all") | (df["target_size"].isin([5, 10, 15, 20, 25, 30]))]
         algorithms = df["algorithm"].unique()
         if include is None:
             include = algorithms
@@ -151,6 +173,7 @@ def plot_combined_grid(source, exclude=None, include=None, out_dir="plots"):
 
 if __name__ == "__main__":
     plot_combined_grid(
-        get_summaries_rec("curated"),
-        include=["pcal", "mcuve", "spa", "bsnet", "v0", "v9", "all"]
+        get_summaries_rec("temp_curated2"),
+        #include=["pcal", "mcuve", "spa", "bsnet", "v0", "v9","bsdr", "all"]
+        include=["bsnet", "v0", "v9","bsdr", "all"]
     )
