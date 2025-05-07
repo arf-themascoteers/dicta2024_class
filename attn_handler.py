@@ -71,7 +71,7 @@ def get_number_of_classes(name):
     class_counts = {
         "indian_pines": 16,
         "paviaU": 10,
-        "salinas": 17,
+        "salinas": 16,
         "ghisaconus": 5
      }
     return class_counts[name]

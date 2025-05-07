@@ -47,10 +47,11 @@ class ZhangNet(nn.Module):
             nn.Linear(512, self.bands)
         )
         self.classnet = nn.Sequential(
-            nn.Linear(self.bands, 32),
+            nn.Linear(self.bands, 128),
             nn.ReLU(),
-            nn.BatchNorm1d(32),
-            nn.Linear(32, self.number_of_classes),
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, self.number_of_classes),
         )
         self.sparse = Sparse(self.dataset)
         num_params = sum(p.numel() for p in self.parameters() if p.requires_grad)

@@ -47,6 +47,21 @@ class ANN(nn.Module):
             nn.Linear(64, self.number_of_classes)
         )
 
+        print("Num classes",self.number_of_classes)
+
+        num_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
+        print("Number of learnable parameters:", num_params)
+
+        fcp = sum(p.numel() for p in self.fc.parameters() if p.requires_grad)
+        print("FC:", fcp)
+
+        idp = sum(p.numel() for p in self.indices if p.requires_grad)
+        print("ID:", idp)
+
+        print("FC+ID:", fcp+idp)
+
+
+
     @staticmethod
     def inverse_sigmoid_torch(x):
         return -torch.log(1.0 / x - 1.0)
@@ -103,7 +118,8 @@ class Algorithm_bsdr(Algorithm):
 
 
     def get_indices(self):
-        indices = torch.round(self.ann.get_indices() * self.original_feature_size ).to(torch.int64).tolist()
+        indices = torch.round(self.ann.get_indices() * self.original_feature_size ).to(torch.int64)
+        indices = torch.clip(indices, 0, self.original_feature_size-1).tolist()
         return list(dict.fromkeys(indices))
 
     def get_num_params(self):
