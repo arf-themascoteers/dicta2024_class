@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
+plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams['font.size'] = 15
+
+
 def get_l0(file):
     df = pd.read_csv(file)
     return df['l0_s'].tolist()
@@ -28,6 +32,7 @@ for i in range(len(y)):
 plt.axhline(y=30, color='gray', linestyle='--', linewidth=1, label="Target size")
 plt.xlabel('Epoch')
 plt.ylabel('$k_{active}$')
-plt.legend()
+plt.legend(fontsize=12, loc='center right')
+plt.tight_layout()
 plt.savefig("l0_b.png")
 plt.show()

@@ -4,7 +4,7 @@ import os
 os.chdir("..")
 
 df = pd.read_csv("temp_curated2_combined.csv")
-dbs = ["pcal", "mcuve", "spa", "bsnet", "v0", "v9", "all"]
+dbs = ["pcal", "mcuve", "spa", "bsnet", "v0", "v9", "all","bsdr"]
 df = df[df["algorithm"].isin(dbs)]
 df = df[(df["algorithm"] == "all") | (df["target_size"].isin([5, 10, 15, 20, 25, 30]))]
 
@@ -16,11 +16,14 @@ ALGS = {
     "spa": "SPA",
     "bsnet": "BS-Net-FC",
     "pcal": "PCAL",
+    "bsdr" : "Proposed BSDR"
 }
 
-order = ["all", "pcal", "mcuve","spa", "bsnet", "v0", "v9"]
+order = ["all", "pcal", "mcuve","spa", "bsnet", "v0", "v9", "bsdr"]
 df["sort_order"] = df["algorithm"].apply(lambda x: order.index(x) if x in order else len(order) + ord(x[0]))
 df = df.sort_values("sort_order").drop(columns=["sort_order"])
+
+#df = df[(df["algorithm"] == "bsdr") | (df["algorithm"] == "all")]
 
 results = []
 for (dataset, algorithm), group in df[df["algorithm"] != "all"].groupby(["dataset", "algorithm"]):

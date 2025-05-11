@@ -29,7 +29,7 @@ ALGS = {
     "v1": "V1: BS-Net-Classifier + FCNN",
     "v2": "V2: V1 + improved aggregation",
     "v6": "V3: V2 + absolute value activation",
-    "v9": "Proposed SABS",
+    "v9": "SABS",
     "bsdr": "Proposed BSDR"
 }
 

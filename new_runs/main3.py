@@ -4,13 +4,13 @@ import os
 os.chdir("..")
 
 if __name__ == '__main__':
-    tag = "bsdr_salinas2"
+    tag = "bsdr_gh3"
     tasks = {
         "algorithms" : ["bsdr"],
         "datasets": [
-            "salinas"
+            "ghisaconus"
         ],
-        "target_sizes" : [5]
+        "target_sizes" : [20]
     }
 
     ev = TaskRunner(tasks,tag,skip_all_bands=True, verbose=True)
